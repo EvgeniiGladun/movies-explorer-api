@@ -2,14 +2,17 @@ require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 
-const { DATA_BASE = 'mongodb://localhost:27017/developdb' } = process.env;
-mongoose.connect(DATA_BASE, {
+const { DATA_BASE_DEV } = require('./constants');
+
+const { NODE_ENV, DATA_BASE = 'mongodb://localhost:27017/developdb' } = process.env;
+
+mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : DATA_BASE_DEV, {
   useNewUrlParser: true,
 });
 
-const { errors } = require('celebrate');
 const { auth } = require('./middlewares/auth');
 const { cors } = require('./middlewares/cors');
 const { limiterAuth, limiter } = require('./middlewares/limiter');

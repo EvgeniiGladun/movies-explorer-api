@@ -1,5 +1,8 @@
 const RegExpUrl = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w-]+)+[\w\-_~:/?#[\]@!$&'()*+,;=.]+$/;
 
+const DATA_BASE_DEV = 'mongodb://localhost:27017/developdb';
+const JWT_SECRET_DEV = '337fd74160df4d86dd7435ef560348417';
+
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
   'https://high-level.nomoredomains.work',
@@ -59,4 +62,6 @@ module.exports = {
   INTERNAL_SERVER_ERROR_MESSAGE,
   allowedCors,
   RegExpUrl,
+  JWT_SECRET_DEV,
+  DATA_BASE_DEV,
 };
