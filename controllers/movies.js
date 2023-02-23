@@ -31,6 +31,9 @@ const createMovie = (req, res, next) => {
 
 const deleteSaveMovies = (req, res, next) => {
   Movie.findById(req.params.movieId)
+    .orFail(() => {
+      throw new NotFoundError(NOT_FOUND_MOVIEID);
+    })
     .then((movie) => {
       const userId = req.user._id;
       const ownerMovie = movie.owner.toString();
@@ -46,9 +49,6 @@ const deleteSaveMovies = (req, res, next) => {
       }
 
       return Movie.findByIdAndRemove(movie._id)
-        .orFail(() => {
-          throw new NotFoundError(NOT_FOUND_MOVIEID);
-        })
         .then(() => res.status(OK).send({ message: OK_MOVIE_DELETE }))
         .catch((err) => {
           if (err.name === 'CastError') {
