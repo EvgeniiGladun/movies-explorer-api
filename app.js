@@ -8,14 +8,13 @@ const index = require('./routes/index');
 
 const { DATA_BASE_DEV } = require('./constants');
 
-const { NODE_ENV, DATA_BASE = 'mongodb://localhost:27017/developdb' } = process.env;
+const { NODE_ENV, DATA_BASE } = process.env;
 
 mongoose.connect(NODE_ENV === 'production' ? DATA_BASE : DATA_BASE_DEV, {
   useNewUrlParser: true,
 });
 
 const { cors } = require('./middlewares/cors');
-const { handlerNotFound } = require('./middlewares/handlerNotFound');
 const { centralHandlerErr } = require('./middlewares/centralHandlerError');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -38,16 +37,13 @@ app.use('/', cors);
 // Подключение роутеров
 app.use(index);
 
-// Обработка несуществующей страницы
-app.use(handlerNotFound);
+// Логгер ошибок
+app.use(errorLogger);
 
 // Обработка ошибок модуля 'Joi'
 app.use(errors());
 
 // Глобальный обработчик ошибок
 app.use(centralHandlerErr);
-
-// Логгер ошибок
-app.use(errorLogger);
 
 module.exports = app;

@@ -35,6 +35,7 @@ userSchema.statics.findUserByCredentials = function (email, password, next) {
         throw new Unauthorized(NOT_FOUND_USER);
       }
 
+      // Сверяем хеши с данными клиента и БД
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {

@@ -1,6 +1,8 @@
 const RegExpUrl = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w-]+)+[\w\-_~:/?#[\]@!$&'()*+,;=.]+$/;
 
-const DATA_BASE_DEV = 'mongodb://localhost:27017/developdb';
+const SERVER_OK = 'Сервак работает';
+
+const DATA_BASE_DEV = 'mongodb://localhost:27017/bitfilmsdb';
 const JWT_SECRET_DEV = '337fd74160df4d86dd7435ef560348417';
 
 // Массив доменов, с которых разрешены кросс-доменные запросы
@@ -33,10 +35,16 @@ const BAD_REQUEST_DEL_LIKE = 'Переданы некорректные данн
 const BAD_REQUEST_CREATE_USER = 'Переданы некорректные данные при создании пользователя.';
 const BAD_REQUEST_SEARCH_USER = 'Переданы некорректные данные при поиске пользователя.';
 const UNAUTHORIZED_MOVIE = 'Данный фильм пренодлежит другому пользователю';
+const UNAUTHORIZED_JWT = 'Аутентификация непройдена, проверьте корректность данных';
 const CONFLICT_EMAIL = 'Пользователь с такой почтой уже существует';
 const INTERNAL_SERVER_ERROR_MESSAGE = 'Произошла неизвестная ошибка, проверьте корректность запроса';
 
+const LOGOUT_MESSAGE = 'Вы вышли из аккаунта';
+const LIMITERAUTH_MESSAGE = 'Упсс... похоже вы привысели лимит по запросам, повторите попытку через час 🫥';
+const LIMITER_MESSAGE = 'Упсс... похоже вы привысели лимит по запросам, повторите попытку через 15 минут 🫥';
+
 module.exports = {
+  SERVER_OK,
   OK,
   CREATED,
   BAD_REQUEST,
@@ -58,10 +66,14 @@ module.exports = {
   BAD_REQUEST_CREATE_USER,
   BAD_REQUEST_SEARCH_USER,
   UNAUTHORIZED_MOVIE,
+  UNAUTHORIZED_JWT,
   CONFLICT_EMAIL,
   INTERNAL_SERVER_ERROR_MESSAGE,
+  LOGOUT_MESSAGE,
   allowedCors,
   RegExpUrl,
   JWT_SECRET_DEV,
   DATA_BASE_DEV,
+  LIMITERAUTH_MESSAGE,
+  LIMITER_MESSAGE,
 };

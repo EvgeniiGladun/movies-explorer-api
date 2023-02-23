@@ -16,33 +16,8 @@ const {
 } = require('../constants');
 
 const createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
-
   Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    owner: req.user ? req.user._id : null,
-    movieId,
-    nameRU,
-    nameEN,
+    ...req.body, owner: req.user._id,
   })
     .then((newMovie) => res.status(CREATED).send(newMovie))
     .catch((err) => {
@@ -58,7 +33,7 @@ const deleteSaveMovies = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .then((movie) => {
       const userId = req.user._id;
-      const ownerMovie = movie ? movie.owner.toString() : null;
+      const ownerMovie = movie.owner.toString();
 
       // Проверяем наличие фильма 'movieId'
       if (movie === null) {
@@ -67,7 +42,7 @@ const deleteSaveMovies = (req, res, next) => {
 
       // Проверяем на владельца
       if (userId !== ownerMovie) {
-        return next(new NotFoundError(UNAUTHORIZED_MOVIE));
+        return next(new Unauthorized(UNAUTHORIZED_MOVIE));
       }
 
       return Movie.findByIdAndRemove(movie._id)
@@ -77,7 +52,7 @@ const deleteSaveMovies = (req, res, next) => {
         .then(() => res.status(OK).send({ message: OK_MOVIE_DELETE }))
         .catch((err) => {
           if (err.name === 'CastError') {
-            return next(new Unauthorized(BAD_REQUEST_MOVIE_DELETE));
+            return next(new BadRequest(BAD_REQUEST_MOVIE_DELETE));
           }
 
           return next(err);

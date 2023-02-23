@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const { JWT_SECRET } = require('../middlewares/auth');
+const { NODE_ENV, JWT_SECRET, JWT_SECRET_DEV } = require('../middlewares/auth');
+const { LOGOUT_MESSAGE } = require('../constants');
 
 const Conflict = require('../errors/Conflict');
 const BadRequest = require('../errors/BadRequest');
@@ -23,11 +24,8 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      // Сверяем хеши с данными клиента и БД
-      bcrypt.compare(password, user.password);
-
       // Создание секретного jwt-токена
-      const token = jwt.sign({ _id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user.id }, NODE_ENV === 'production' ? JWT_SECRET : JWT_SECRET_DEV, { expiresIn: '7d' });
 
       // Отправка кука пользователю с ключем
       return res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, Secure: true }).send({
@@ -38,14 +36,10 @@ const login = (req, res, next) => {
 };
 
 // Пользователь выхоит из аккаунта
-const logOut = (req, res, next) => {
-  try {
-    res.clearCookie('jwt').send({
-      message: 'Вышли из аккаунта',
-    });
-  } catch (err) {
-    next(err);
-  }
+const logOut = (req, res) => {
+  res.clearCookie('jwt').send({
+    message: LOGOUT_MESSAGE,
+  });
 };
 
 const createUser = (req, res, next) => {
@@ -116,6 +110,10 @@ const updateMeProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequest(BAD_REQUEST_CREATE_USER));
+      }
+
+      if (err.code === 11000) {
+        return next(new Conflict(CONFLICT_EMAIL));
       }
 
       return next(err);
