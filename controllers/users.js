@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const { NODE_ENV, JWT_SECRET, JWT_SECRET_DEV } = require('../middlewares/auth');
-const { LOGOUT_MESSAGE } = require('../constants');
+const { NODE_ENV, JWT_SECRET } = process.env;
+const { LOGOUT_MESSAGE, JWT_SECRET_DEV } = require('../constants');
 
 const Conflict = require('../errors/Conflict');
 const BadRequest = require('../errors/BadRequest');
