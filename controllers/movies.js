@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
 
 const BadRequest = require('../errors/BadRequest');
-const Unauthorized = require('../errors/Unauthorized');
+const Forbidden = require('../errors/Forbidden');
 const NotFoundError = require('../errors/NotFoundError');
 
 const {
@@ -35,17 +35,16 @@ const deleteSaveMovies = (req, res, next) => {
       throw new NotFoundError(NOT_FOUND_MOVIEID);
     })
     .then((movie) => {
-      const userId = req.user._id;
-      const ownerMovie = movie.owner.toString();
-
       // Проверяем наличие фильма 'movieId'
       if (movie === null) {
         return next(new NotFoundError(NOT_FOUND_MOVIE_MESSAGE));
       }
 
+      const userId = req.user._id;
+      const ownerMovie = movie.owner.toString();
       // Проверяем на владельца
       if (userId !== ownerMovie) {
-        return next(new Unauthorized(UNAUTHORIZED_MOVIE));
+        return next(new Forbidden(UNAUTHORIZED_MOVIE));
       }
 
       return Movie.findByIdAndRemove(movie._id)

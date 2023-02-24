@@ -30,7 +30,4 @@ const auth = (req, res, next) => {
 
 module.exports = {
   auth,
-  NODE_ENV,
-  JWT_SECRET,
-  JWT_SECRET_DEV,
 };
