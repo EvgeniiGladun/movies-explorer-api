@@ -10,6 +10,8 @@ const Unauthorized = require('../errors/Unauthorized');
 const auth = (req, res, next) => {
   const JWT = req.cookies.jwt;
 
+  console.log(JWT);
+
   if (!JWT) {
     throw next(new Unauthorized(UNAUTHORIZED_JWT));
   }

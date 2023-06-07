@@ -3,7 +3,7 @@ const { LIMITERAUTH_MESSAGE, LIMITER_MESSAGE } = require('../constants');
 
 const limiterAuth = rateLimit({
   windowMs: 60 * 60 * 1000, // ограничения по времени, за 1 час максимум 5 запросов
-  max: 5, // можно совершить максимум 5 запросов с одного IP
+  max: 500, // можно совершить максимум 5 запросов с одного IP
   message: {
     message: LIMITERAUTH_MESSAGE,
   },
