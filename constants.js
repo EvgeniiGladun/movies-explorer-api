@@ -9,6 +9,8 @@ const JWT_SECRET_DEV = '337fd74160df4d86dd7435ef560348417';
 const allowedCors = [
   'https://high-level.nomoredomains.work',
   'http://high-level.nomoredomains.work',
+  'https://localhost:3000',
+  'http://localhost:3000',
 ];
 
 // Коды ошибок
